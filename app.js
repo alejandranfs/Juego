@@ -1,15 +1,14 @@
-import {IMAGES as images} from './initialize.js'
+import {IMAGES as images, mainInterval} from './initialize.js'
 import {ctx, canvas, drawObj, run, start, dT} from './initialize.js'
-
+let t = 0;
+let score = 0;
+let zonas = [];
 let zona1 = {
     x:0,
     y:0,
     vX: 50,
     vY: 0,
     direccion: "derecha",
-    direccion: "abajo",
-    direccion: "izquierda",
-    direccion: "arriba",
 
     dibujarse:function(){
         ctx.fillStyle = "orange";
@@ -100,296 +99,29 @@ let zona1 = {
        
     }
 }
-let zona2 = {
-    x2:340,
-    y2:340,
-    vX2: 50,
-    vY2: 0,
-    direccion: "abajo",
-    direccion: "izquierda",
-    direccion: "arriba",
-    direccion: "derecha",
-    
-    dibujarse:function(){
-        ctx.fillStyle = "orange";
-        ctx.fillRect (this.x2, this.y2, 60, 60);
+let zona2 = Object.create(zona1)
+zona2.x= 340;
+zona2.y=340;
+zona2.direccion = "izquierda";
 
-        ctx.beginPath();
-     ctx.moveTo(this.x2 , this.y2);
-     ctx.lineTo(this.x2 + 60 , this.y2);
-     ctx.lineTo(this.x2 + 60, this.y2 + 60 );
-     ctx.lineTo(this.x2 , this.y2 + 60);
-     ctx.lineTo(this.x2, this.y2);
-     ctx.stroke();
-    },
-    moverse:function(){
-        
-        if(this.y==0 && this.x<340){
-            this.direccion = "derecha"
-        }
-        if(this.direccion == "derecha"){
-            this.vX =50
-            this.vY = 0
-            this.y = 0
-        }
-        if( this.x>340 ){
-            this.direccion = "abajo"
-        }
-        //f1
-        if(this.x==340 && this.y<340){
-            this.direccion = "abajo"
-        }
-        if(this.direccion == "abajo"){
-            this.vX =0
-            this.vY = 50
-            this.x = 340
-        }
-        if( this.y>=340 && this.x > 60){
-            this.y = this.y;
-            this.direccion = "izquierda"
-        }
-        //f1
-        //f2
-        if(this.x <= 0 && this.y > 60){
-            this.direccion = "arriba"
-        }
-        if(this.direccion == "arriba"){
-            this.vX =0
-            this.vY = -50
-            this.x = 0
-        }
-        //f2
-        if(this.direccion == "abajo"){
-            this.vX =0
-            this.vY = 50
-            this.x = 340
-        }
-        if(this.y==340 && this.x>60){
-            this.direccion = "izquierda"
-        }
-        if(this.direccion == "izquierda"){
-            this.vX =-50
-            this.vY = 0
-            this.y = 340
-        }
-        if(this.y==400 && this.x==60){
-            this.direccion = "arriba"
-        }
-        if(this.direccion == "arriba"){
-            this.vX =0
-            this.vY = -50
-            this.x = 0
-        }
-        //final
-        if(this.y<=0 && this.x<=0){
-            this.direccion = "derecha"
-        }
-        if(this.direccion == "derecha"){
-            this.vX =50
-            this.vY = 0
-            this.y = 0
-        }
-        if( this.x>340 ){
-            this.direccion = "abajo"
-        }
+let zona3 = Object.create(zona1)
+zona3.x= 0;
+zona3.y=280;
+zona3.direccion = "arriba";
 
-
-        this.x2 = this.x2  - this.vX2 * dT/1000;
-        this.y2 = this.y2 + this.vY2 * dT/1000;
-    }
+let zona4 = Object.create(zona1)
+zona4.x= 340;
+zona4.y=0;
+zona4.direccion = "abajo";
+zonas.push(zona1)
+zonas.push(zona2)
+zonas.push(zona3)
+zonas.push(zona4)
+function mostrarPuntaje(){
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "black"
+    ctx.fillText(`Puntaje: ${score}`, 10, 50);
 }
-let zona3 = {
-    x3:0,
-    y3:280,
-    vX3: 0,
-    vY3: 50,
-    direccion: "izquierda",
-    direccion: "abajo",
-    direccion: "arriba",
-    direccion: "derecha",
-
-    dibujarse:function(){
-        ctx.fillStyle = "orange";
-        ctx.fillRect (this.x3, this.y3, 60, 60);
-
-        ctx.beginPath();
-     ctx.moveTo(this.x3 , this.y3);
-     ctx.lineTo(this.x3 + 60 , this.y3);
-     ctx.lineTo(this.x3 + 60, this.y3 + 60 );
-     ctx.lineTo(this.x3 , this.y3 + 60);
-     ctx.lineTo(this.x3, this.y3);
-     ctx.stroke();
-    },
-    moverse:function(){
-        
-        if(this.y==0 && this.x<340){
-            this.direccion = "derecha"
-        }
-        if(this.direccion == "derecha"){
-            this.vX =50
-            this.vY = 0
-            this.y = 0
-        }
-        if( this.x>340 ){
-            this.direccion = "abajo"
-        }
-        //f1
-        if(this.x==340 && this.y<340){
-            this.direccion = "abajo"
-        }
-        if(this.direccion == "abajo"){
-            this.vX =0
-            this.vY = 50
-            this.x = 340
-        }
-        if( this.y>=340 && this.x > 60){
-            this.y = this.y;
-            this.direccion = "izquierda"
-        }
-        //f1
-        //f2
-        if(this.x <= 0 && this.y > 60){
-            this.direccion = "arriba"
-        }
-        if(this.direccion == "arriba"){
-            this.vX =0
-            this.vY = -50
-            this.x = 0
-        }
-        //f2
-        if(this.direccion == "abajo"){
-            this.vX =0
-            this.vY = 50
-            this.x = 340
-        }
-        if(this.y==340 && this.x>60){
-            this.direccion = "izquierda"
-        }
-        if(this.direccion == "izquierda"){
-            this.vX =-50
-            this.vY = 0
-            this.y = 340
-        }
-        if(this.y==400 && this.x==60){
-            this.direccion = "arriba"
-        }
-        if(this.direccion == "arriba"){
-            this.vX =0
-            this.vY = -50
-            this.x = 0
-        }
-        //final
-        if(this.y<=0 && this.x<=0){
-            this.direccion = "derecha"
-        }
-        if(this.direccion == "derecha"){
-            this.vX =50
-            this.vY = 0
-            this.y = 0
-        }
-        if( this.x>340 ){
-            this.direccion = "abajo"
-        }
-        this.x3 = this.x3 + this.vX3 * dT/1000;
-        this.y3 = this.y3 - this.vY3 * dT/1000;
-    }
-}
-let zona4 = {
-    x4:340,
-    y4:0,
-    vX4: 0,
-    vY4: 50,
-    direccion: "arriba",
-    direccion: "derecha",
-    direccion: "abajo",
-    direccion: "izquierda",
-
-    dibujarse:function(){
-        ctx.fillStyle = "orange";
-        ctx.fillRect (this.x4, this.y4, 60, 60);
-
-        ctx.beginPath();
-     ctx.moveTo(this.x4 , this.y4);
-     ctx.lineTo(this.x4 + 60 , this.y4);
-     ctx.lineTo(this.x4 + 60, this.y4 + 60 );
-     ctx.lineTo(this.x4 , this.y4 + 60);
-     ctx.lineTo(this.x4, this.y4);
-     ctx.stroke();
-    },
-    moverse:function(){
-        if(this.y==0 && this.x<340){
-            this.direccion = "derecha"
-        }
-        if(this.direccion == "derecha"){
-            this.vX =50
-            this.vY = 0
-            this.y = 0
-        }
-        if( this.x>340 ){
-            this.direccion = "abajo"
-        }
-        //f1
-        if(this.x==340 && this.y<340){
-            this.direccion = "abajo"
-        }
-        if(this.direccion == "abajo"){
-            this.vX =0
-            this.vY = 50
-            this.x = 340
-        }
-        if( this.y>=340 && this.x > 60){
-            this.y = this.y;
-            this.direccion = "izquierda"
-        }
-        //f1
-        //f2
-        if(this.x <= 0 && this.y > 60){
-            this.direccion = "arriba"
-        }
-        if(this.direccion == "arriba"){
-            this.vX =0
-            this.vY = -50
-            this.x = 0
-        }
-        //f2
-        if(this.direccion == "abajo"){
-            this.vX =0
-            this.vY = 50
-            this.x = 340
-        }
-        if(this.y==340 && this.x>60){
-            this.direccion = "izquierda"
-        }
-        if(this.direccion == "izquierda"){
-            this.vX =-50
-            this.vY = 0
-            this.y = 340
-        }
-        if(this.y==400 && this.x==60){
-            this.direccion = "arriba"
-        }
-        if(this.direccion == "arriba"){
-            this.vX =0
-            this.vY = -50
-            this.x = 0
-        }
-        //final
-        if(this.y<=0 && this.x<=0){
-            this.direccion = "derecha"
-        }
-        if(this.direccion == "derecha"){
-            this.vX =50
-            this.vY = 0
-            this.y = 0
-        }
-        if( this.x>340 ){
-            this.direccion = "abajo"
-        }
-        this.x4 = this.x4 + this.vX4 * dT/1000;
-        this.y4 = this.y4 + this.vY4 * dT/1000;
-    }
-}
-//balones
 let balones = []
 let Balon = {
     x:200,
@@ -411,25 +143,93 @@ let Balon = {
 
 }
 
-    
+function mostrarTiempo() {
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "black"
+    ctx.fillText(`Tiempo: ${Math.round(t)}`, 10, 100);
+}
+function colisionConBalones(balones)
+{
 
+    let distancia = Math.sqrt(Math.pow(Balon.x - GAME.objects.player.x, 2) + Math.pow(Balon.y - GAME.objects.player.y, 2));
+    if (distancia < Balon.r + GAME.objects.player.width/2) return true;
+    else return  false;
+}
+function buscarColisiones()
+{
+    let colisiones = []
+    for (let i=0; i < GAME.objects.balones.length; i++){
+        if(colisionConNave(GAME.objects.balones[i])) colisiones.push(i);
+    }
+    return colisiones;
+}
+function algunaSeSalio(){
+    for (let balon of GAME.objects.balones){
+        // se salió?
+        if(balon.x >= 400 + balon.r || balon.x <= -balon.r ||
+            balon.y >= 400 + balon.r || balon.y <= -balon.r )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+function quitarBalones(colisiones) {
+    for(let pos of colisiones){
+        // splice quita elementos de un array.
+        GAME.objects.balones.splice(pos, 1);
+    }
+}
+function resetSpeed() {
+    GAME.objects.player.speed = 15;
+    GAME.objects.player.dibujarse();
+    GAME.objects.player.moverse();
+    let colisiones = buscarColisiones();
+    quitarBalones(colisiones);
+    GAME.score += colisiones.length;
+}
+function calcularPuntaje(){
+ for(let i = 0; i<balones.length;i++){
+     for(let zona of zonas){
+         if(
+             balones[i].x>zona.x && balones[i].x<zona.x +60 &&
+             balones[i].y>zona.y && balones[i].y<zona.y +60)
+             {
+             score = score + 1;
+             balones.splice(i, 1)
+             }
+     }
+ }
+ 
+}
 drawObj.draw =  function(){
+    t = t + dT/1000;
     ctx.clearRect(0, 0, 400, 400);
-    zona1.dibujarse();
-    zona1.moverse();
-    zona2.dibujarse();
-    zona2.moverse();
-    zona3.dibujarse();
-    zona3.moverse();
-    zona4.dibujarse();
-    zona4.moverse();
+    for(let zona of zonas){
+        zona.dibujarse();
+        zona.moverse();
+    }
+
     for (let balon of balones){
-        // console.log(particula)
         balon.dibujarse()
         balon.moverse()
     }
-  
-}
+    calcularPuntaje();
+    mostrarPuntaje();
+    mostrarTiempo();
+    if ( t > 20 ){
+        clearInterval(mainInterval)
+        ctx.font = "50px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText(`PERDISTE`, 80, 180);
+    }
+    if (score <=30)
+        pause();
+        ctx.font = "50px Arial";
+        ctx.fillStyle = "green";
+        ctx.fillText(`GANASTE`, 80, 180);
+    }
+
 
 run()
 function crearParticula(je){
@@ -437,8 +237,8 @@ function crearParticula(je){
     nuevoBalon.x = 200
     nuevoBalon.y = 200
     let ang = 2 * Math.PI * Math.random()
-    let velocidad = Math.random() * 400
-    let vX = 230* Math.random()
+    let velocidad = 400
+    let vX = 230
     nuevoBalon.vX = velocidad* Math.cos(ang)
     nuevoBalon.vY = velocidad * Math.sin(ang)
     balones.push(nuevoBalon)
